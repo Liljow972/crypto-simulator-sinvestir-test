@@ -162,7 +162,12 @@ export async function getMarketChartRange(
   to: Date,
   signal?: AbortSignal,
 ): Promise<PricePoint[]> {
-  const fromTs = Math.floor(from.getTime() / 1000);
+  // Garde-fou : l'API publique rejette toute fenêtre > 365 jours (HTTP 401).
+  // On borne `from` pour qu'une plage trop large renvoie quand même des données
+  // (au lieu d'une erreur) — marge d'un jour, l'API mesurant depuis l'instant T.
+  const MS_PER_DAY = 86_400_000;
+  const minFromTime = to.getTime() - (MAX_HISTORY_DAYS - 1) * MS_PER_DAY;
+  const fromTs = Math.floor(Math.max(from.getTime(), minFromTime) / 1000);
   const toTs = Math.floor(to.getTime() / 1000);
 
   const url =

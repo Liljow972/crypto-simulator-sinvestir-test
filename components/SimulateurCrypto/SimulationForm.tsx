@@ -33,15 +33,26 @@ function daysAgo(days: number): Date {
   return date;
 }
 
-// Marge de sécurité d'un jour sous la limite des 365 jours du plan gratuit.
+function monthsAgo(months: number): Date {
+  const date = new Date();
+  date.setMonth(date.getMonth() - months);
+  return date;
+}
+
+// Date la plus ancienne sélectionnable : ~1 jour sous la limite des 365 jours
+// (l'API mesure la fenêtre depuis l'instant présent, donc 365 jours pile = 401).
 const earliestDate = toISODate(daysAgo(MAX_HISTORY_DAYS - 1));
+
+// Défaut : il y a 11 mois, même quantième → lecture claire (ex. 19/07 → 19/06),
+// avec une marge confortable sous la limite.
+const defaultStartDate = toISODate(monthsAgo(11));
 
 export function SimulationForm({ onSubmit, isLoading }: SimulationFormProps) {
   const [coin, setCoin] = useState<CoinSearchResult | null>(null);
   const [amount, setAmount] = useState<number>(1000);
   const [mode, setMode] = useState<SimulationMode>("one-shot");
   const [frequency, setFrequency] = useState<DcaFrequency>("monthly");
-  const [startDate, setStartDate] = useState<string>(earliestDate);
+  const [startDate, setStartDate] = useState<string>(defaultStartDate);
   const [endDate, setEndDate] = useState<string>(toISODate(new Date()));
 
   const today = toISODate(new Date());
