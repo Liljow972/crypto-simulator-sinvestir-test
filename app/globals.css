@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Variables CSS du design system S'investir.
+ * Dupliquées des tokens Tailwind pour rester accessibles depuis du CSS brut
+ * (ex. styles inline Recharts, scrollbars custom).
+ */
+:root {
+  --bg-primary: #0a0f1e;
+  --bg-card: #0d1530;
+  --bg-input: #111827;
+  --accent-blue: #2563eb;
+  --accent-gold: #c9a84c;
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --border: #1e293b;
+  --success: #10b981;
+  --danger: #ef4444;
+
+  --radius-card: 12px;
+  --radius-button: 9999px;
+  --radius-input: 8px;
+}
+
+body {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar discrète, cohérente avec le fond sombre */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 9999px;
+}
+
+/* Retire les flèches des inputs number pour un rendu épuré */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
