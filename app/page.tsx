@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { SimulateurCrypto } from "@/components/SimulateurCrypto";
 import { ChatAssistant } from "@/components/ChatAssistant";
 
@@ -68,14 +69,16 @@ export default function Home() {
 }
 
 function Logo() {
+  // Wordmark officiel S'investir (doré sur fond transparent) — lockup complet,
+  // donc pas de texte additionnel à côté.
   return (
-    <span className="flex items-center gap-2.5">
-      <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-si-gold font-display text-lg font-extrabold text-si-bg">
-        S
-      </span>
-      <span className="font-display text-lg font-extrabold text-white">
-        S<span className="text-si-gold">&apos;</span>investir
-      </span>
-    </span>
+    <Image
+      src="/sinvestir-logo.svg"
+      alt="S'investir"
+      width={150}
+      height={30}
+      priority
+      className="h-7 w-auto"
+    />
   );
 }

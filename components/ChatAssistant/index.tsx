@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Bot } from "lucide-react";
 
 type ChatRole = "user" | "assistant";
 type ChatMessage = { role: ChatRole; content: string };
@@ -90,7 +91,7 @@ export function ChatAssistant() {
           <div className="flex items-center justify-between border-b border-si-border px-4 py-3">
             <div className="flex items-center gap-2">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-si-blue/15 text-si-blue">
-                <ChatIcon />
+                <Bot size={16} />
               </span>
               <span className="font-display text-sm font-semibold text-white">
                 Assistant S&apos;investir
@@ -114,7 +115,8 @@ export function ChatAssistant() {
             {messages.length === 0 && (
               <div className="space-y-3">
                 <p className="text-sm text-si-muted">
-                  Bonjour 👋 Posez-moi une question sur le simulateur.
+                  Bonjour ! Je suis l&apos;assistant S&apos;investir. Comment
+                  puis-je vous aider avec le simulateur ?
                 </p>
                 <div className="flex flex-col gap-2">
                   {WELCOME_PROMPTS.map((prompt) => (
@@ -175,11 +177,11 @@ export function ChatAssistant() {
       <button
         type="button"
         onClick={() => setIsOpen((open) => !open)}
-        className="flex items-center gap-2 self-end rounded-full bg-si-blue px-5 py-3 font-semibold text-white shadow-card transition-opacity hover:opacity-90"
-        aria-label={isOpen ? "Fermer l'assistant" : "Ouvrir l'assistant"}
+        className="flex items-center gap-2 self-end rounded-full bg-si-blue px-5 py-3 font-semibold text-white shadow-card transition-all duration-200 hover:scale-105 hover:bg-[#1d4ed8] active:scale-95"
+        aria-label={isOpen ? "Fermer l'assistant" : "Ouvrir l'assistant S'investir"}
       >
-        <ChatIcon />
-        {!isOpen && <span>Aide</span>}
+        <Bot size={18} strokeWidth={2} />
+        {!isOpen && <span className="text-sm font-semibold">Assistant</span>}
       </button>
     </div>
   );
@@ -210,24 +212,6 @@ function MessageBubble({
         )}
       </div>
     </div>
-  );
-}
-
-function ChatIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
   );
 }
 

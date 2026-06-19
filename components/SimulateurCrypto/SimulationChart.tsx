@@ -70,6 +70,11 @@ export function SimulationChart({ data }: SimulationChartProps) {
     marker: point.isInvestmentDate ? point.investedValue : null,
   }));
 
+  // On n'affiche les points DCA que s'ils restent lisibles (≤ 20 versements) ;
+  // au-delà (ex. DCA hebdo sur 1 an), ils surchargent le graphique.
+  const markerCount = data.filter((point) => point.isInvestmentDate).length;
+  const showDots = markerCount > 0 && markerCount <= 20;
+
   return (
     <div className="rounded-card border border-si-border bg-si-card p-4 shadow-card sm:p-5">
       {/* Légende custom */}
@@ -126,7 +131,7 @@ export function SimulationChart({ data }: SimulationChartProps) {
             strokeWidth={2}
             fill="url(#portfolioGradient)"
             dot={false}
-            activeDot={{ r: 4, fill: "#2563EB", stroke: "#0A0F1E" }}
+            activeDot={{ r: 5, fill: "#2563EB", stroke: "#0A0F1E" }}
             isAnimationActive={false}
             name="Portefeuille"
           />
@@ -140,12 +145,13 @@ export function SimulationChart({ data }: SimulationChartProps) {
             isAnimationActive={false}
             name="Investi"
           />
-          {/* Points des versements DCA */}
+          {/* Points des versements DCA (masqués si trop nombreux) */}
           <Line
             type="monotone"
             dataKey="marker"
             stroke="none"
-            dot={{ r: 3, fill: "#94A3B8", stroke: "#0D1530", strokeWidth: 1 }}
+            dot={showDots ? { r: 2.5, fill: "#94A3B8", strokeWidth: 0 } : false}
+            activeDot={{ r: 4, fill: "#94A3B8" }}
             isAnimationActive={false}
             legendType="none"
             connectNulls={false}

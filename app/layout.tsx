@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -20,6 +20,14 @@ export const metadata: Metadata = {
   title: "Simulateur Crypto — S'investir",
   description:
     "Simulez un investissement crypto (one-shot ou DCA) avec des données de marché réelles. Un outil S'investir.",
+};
+
+// viewport-fit=cover : évite que le bouton flottant soit masqué par la barre
+// d'accueil iOS (safe-area) sur mobile.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

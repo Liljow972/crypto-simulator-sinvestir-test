@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Info } from "lucide-react";
 import { CryptoSearch } from "./CryptoSearch";
 import { MAX_HISTORY_DAYS } from "@/lib/coingecko";
 import { formatNumberFR } from "@/lib/format";
@@ -209,28 +210,34 @@ export function SimulationForm({ onSubmit, isLoading }: SimulationFormProps) {
         </div>
       </div>
 
-      <p className="-mt-1 text-[11px] text-si-muted">
-        Historique disponible sur les 365 derniers jours (API CoinGecko gratuite).
-      </p>
+      <div className="-mt-1 flex items-center gap-1.5 text-si-muted">
+        <Info size={12} className="shrink-0" />
+        <span className="text-xs">
+          Données disponibles sur les 12 derniers mois
+        </span>
+      </div>
 
       {validationError && (
         <p className="text-sm text-danger">{validationError}</p>
       )}
 
-      <button
-        type="submit"
-        disabled={!canSubmit}
-        className="flex items-center justify-center gap-2 rounded-full bg-si-blue px-6 py-3.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        {isLoading ? (
-          <>
-            <Spinner />
-            Simulation en cours…
-          </>
-        ) : (
-          "Simuler"
-        )}
-      </button>
+      {/* mobile: bouton ancré en bas de la carte pour rester accessible · desktop: flux normal */}
+      <div className="sticky bottom-0 z-10 -mx-5 -mb-5 mt-1 border-t border-si-border/60 bg-si-card px-5 pb-5 pt-4 sm:static sm:m-0 sm:border-0 sm:bg-transparent sm:p-0">
+        <button
+          type="submit"
+          disabled={!canSubmit}
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-si-blue px-6 py-3.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {isLoading ? (
+            <>
+              <Spinner />
+              Simulation en cours…
+            </>
+          ) : (
+            "Simuler"
+          )}
+        </button>
+      </div>
     </form>
   );
 }
