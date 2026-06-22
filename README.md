@@ -2,8 +2,8 @@
 
 Simulateur d'investissement en cryptomonnaies (one-shot & DCA) sur données de marché réelles, dans le design system de la suite **simulateurs.sinvestir.fr**, avec un assistant IA contextuel intégré.
 
-- **Démo live :** _[lien Vercel à compléter]_
-- **Repo :** _[lien GitHub à compléter]_
+- **Démo live :** [https://crypto-simulator-sinvestir-test.vercel.app](https://crypto-simulator-sinvestir-test.vercel.app)
+- **Repo :** [https://github.com/Liljow972/crypto-simulator-sinvestir-test](https://github.com/Liljow972/crypto-simulator-sinvestir-test)
 
 ---
 

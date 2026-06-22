@@ -23,30 +23,43 @@ const FREQUENCIES: { value: DcaFrequency; label: string }[] = [
   { value: "monthly", label: "Mensuel" },
 ];
 
-/** Date → chaîne « AAAA-MM-JJ » pour les inputs natifs. */
+/**
+ * Date → chaîne « AAAA-MM-JJ » en heure LOCALE.
+ * Le champ <input type="date"> raisonne en local ; passer par toISOString()
+ * (UTC) décalerait l'affichage et la contrainte `max` d'un jour selon le fuseau.
+ */
 function toISODate(date: Date): string {
-  return date.toISOString().slice(0, 10);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-function daysAgo(days: number): Date {
-  const date = new Date();
-  date.setDate(date.getDate() - days);
-  return date;
+function addDays(date: Date, days: number): Date {
+  const copy = new Date(date);
+  copy.setDate(copy.getDate() + days);
+  return copy;
 }
 
-function monthsAgo(months: number): Date {
-  const date = new Date();
-  date.setMonth(date.getMonth() - months);
-  return date;
+function addMonths(date: Date, months: number): Date {
+  const copy = new Date(date);
+  copy.setMonth(copy.getMonth() + months);
+  return copy;
 }
 
-// Date la plus ancienne sélectionnable : ~1 jour sous la limite des 365 jours
+// Date de fin maximale = HIER : dernière journée de marché complète, et cela
+// neutralise tout décalage de fuseau sur « aujourd'hui ». Centralisé ici et
+// réutilisé partout (valeur par défaut + contrainte `max` des deux champs).
+const yesterday = addDays(new Date(), -1);
+const maxDate = toISODate(yesterday);
+
+// Borne basse sélectionnable : ~2 jours sous la limite des 365 jours
 // (l'API mesure la fenêtre depuis l'instant présent, donc 365 jours pile = 401).
-const earliestDate = toISODate(daysAgo(MAX_HISTORY_DAYS - 1));
+const earliestDate = toISODate(addDays(yesterday, -(MAX_HISTORY_DAYS - 2)));
 
-// Défaut : il y a 11 mois, même quantième → lecture claire (ex. 19/07 → 19/06),
-// avec une marge confortable sous la limite.
-const defaultStartDate = toISODate(monthsAgo(11));
+// Début par défaut : 11 mois avant la date de fin, même quantième → lecture
+// claire (ex. 19/07 → 19/06) avec une marge confortable sous la limite.
+const defaultStartDate = toISODate(addMonths(yesterday, -11));
 
 export function SimulationForm({ onSubmit, isLoading }: SimulationFormProps) {
   const [coin, setCoin] = useState<CoinSearchResult | null>(null);
@@ -54,21 +67,19 @@ export function SimulationForm({ onSubmit, isLoading }: SimulationFormProps) {
   const [mode, setMode] = useState<SimulationMode>("one-shot");
   const [frequency, setFrequency] = useState<DcaFrequency>("monthly");
   const [startDate, setStartDate] = useState<string>(defaultStartDate);
-  const [endDate, setEndDate] = useState<string>(toISODate(new Date()));
-
-  const today = toISODate(new Date());
+  const [endDate, setEndDate] = useState<string>(maxDate);
 
   // Validation inline (pas d'alert JS).
   const validationError = useMemo<string | null>(() => {
     if (!startDate || !endDate) return "Renseignez les deux dates.";
     if (new Date(endDate) <= new Date(startDate))
       return "La date de fin doit être postérieure à la date de début.";
-    if (new Date(endDate) > new Date(today))
-      return "La date de fin ne peut pas être dans le futur.";
+    if (new Date(endDate) > new Date(maxDate))
+      return "La date de fin ne peut pas dépasser hier (dernière journée complète).";
     if (new Date(startDate) < new Date(earliestDate))
       return "L'historique gratuit est limité aux 365 derniers jours.";
     return null;
-  }, [startDate, endDate, today]);
+  }, [startDate, endDate]);
 
   const canSubmit =
     coin !== null && amount > 0 && validationError === null && !isLoading;
@@ -186,7 +197,7 @@ export function SimulationForm({ onSubmit, isLoading }: SimulationFormProps) {
             type="date"
             value={startDate}
             min={earliestDate}
-            max={today}
+            max={maxDate}
             onChange={(event) => setStartDate(event.target.value)}
             className="w-full rounded-input border border-si-border bg-si-input px-4 py-3 text-white [color-scheme:dark] focus:border-si-blue focus:outline-none focus:ring-1 focus:ring-si-blue"
           />
@@ -203,7 +214,7 @@ export function SimulationForm({ onSubmit, isLoading }: SimulationFormProps) {
             type="date"
             value={endDate}
             min={startDate}
-            max={today}
+            max={maxDate}
             onChange={(event) => setEndDate(event.target.value)}
             className="w-full rounded-input border border-si-border bg-si-input px-4 py-3 text-white [color-scheme:dark] focus:border-si-blue focus:outline-none focus:ring-1 focus:ring-si-blue"
           />
