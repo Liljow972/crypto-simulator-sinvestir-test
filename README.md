@@ -145,3 +145,14 @@ Effort : faible (même composant, system prompt différent par route).
 Les utilisateurs qui font des simulations ont souvent une intention d'action (parler à un CGP,
 décider d'un investissement). Un export PDF brandé S'investir de leurs résultats serait un
 outil de rétention fort et un vecteur de notoriété.
+
+---
+
+## Auteur
+
+**Jordan Litampha** — Webdesigner & Ingénieur IA
+🌐 [lj-design.fr](https://lj-design.fr)
+
+© 2026 Jordan Litampha — LJ Design. Tous droits réservés.
+Projet réalisé dans le cadre d'un test technique, publié à des fins de démonstration
+et d'évaluation. Voir [LICENSE](LICENSE).
